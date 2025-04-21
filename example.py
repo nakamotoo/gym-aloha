@@ -1,10 +1,13 @@
+import os
+os.environ["MUJOCO_GL"] = "egl"
 import imageio
 import gymnasium as gym
 import numpy as np
 import gym_aloha
 
-env = gym.make("gym_aloha/AlohaInsertion-v0")
+env = gym.make("gym_aloha/AlohaTransferCube-v0", obs_type="pixels_agent_box_pos")
 observation, info = env.reset()
+import pdb; pdb.set_trace()
 frames = []
 
 for _ in range(1000):

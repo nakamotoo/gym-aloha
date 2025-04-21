@@ -82,7 +82,33 @@ class AlohaEnv(gym.Env):
                     ),
                 }
             )
-
+        elif self.obs_type == 'pixels_agent_box_pos':
+            self.observation_space = spaces.Dict(
+                {
+                    "pixels": spaces.Dict(
+                        {
+                            "top": spaces.Box(
+                                low=0,
+                                high=255,
+                                shape=(self.observation_height, self.observation_width, 3),
+                                dtype=np.uint8,
+                            )
+                        }
+                    ),
+                    "agent_pos": spaces.Box(
+                        low=-1000.0,
+                        high=1000.0,
+                        shape=(len(JOINTS),),
+                        dtype=np.float64,
+                    ),
+                    "box_pos": spaces.Box(
+                        low=-1000.0,
+                        high=1000.0,
+                        shape=(7,),
+                        dtype=np.float64,
+                    ),
+                }
+            )
         self.action_space = spaces.Box(low=-1, high=1, shape=(len(ACTIONS),), dtype=np.float32)
 
     def render(self):
@@ -144,6 +170,12 @@ class AlohaEnv(gym.Env):
             obs = {
                 "pixels": {"top": raw_obs["images"]["top"].copy()},
                 "agent_pos": raw_obs["qpos"],
+            }
+        elif self.obs_type == 'pixels_agent_box_pos':
+            obs = {
+                "pixels": {"top": raw_obs["images"]["top"].copy()},
+                "agent_pos": raw_obs["qpos"],
+                "box_pos": raw_obs["env_state"][-7:],
             }
         return obs
 
